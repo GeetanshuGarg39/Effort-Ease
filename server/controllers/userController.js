@@ -71,3 +71,11 @@ export const registerUser = asyncHandler(async (req, res) => {
     throw new Error("Error while registering user");
   }
 });
+
+export const logoutUser = asyncHandler(async (req, res) => {
+  res.cookie("jwt", "", {
+    httpOnly: true,
+    expiresIn: new Date(0),
+  });
+  res.status(200).send(" User logged out");
+});
