@@ -1,9 +1,45 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom"; 
+import axios from "axios";
+
+const initialValues = {
+    email: "",
+    password: ''
+}
 
 const LoginCard = () => {
+
+  const history = useNavigate();
+
+  const [inputs,setInputs] = useState(initialValues)
+
+  const handleChange = (e) => {
+    setInputs((prev) => ({
+      ...prev,[e.target.name]:e.target.value,
+    }))
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const onSubmit = async() => {
+      try{
+        const res = await axios.post("http://localhost:8000/api/users/auth", {
+          email:inputs.email,
+          password:inputs.password
+        })
+        console.log(res.data);
+        setInputs(initialValues);
+        history("/home")
+      }catch(error){
+        console.log(error)
+      }
+    }
+    onSubmit()
+
+  }
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div>
         <label
           htmlFor="email"
@@ -14,7 +50,9 @@ const LoginCard = () => {
         <input
           type="email"
           id="email"
-          // value={email}
+          name="email"
+          value={inputs.email}
+          onChange={handleChange}
           className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500"
           placeholder="Your email"
           autoComplete="email"
@@ -31,7 +69,9 @@ const LoginCard = () => {
         <input
           type="password"
           id="password"
-          // value={password}
+          name="password"
+          value={inputs.password}
+          onChange={handleChange}
           className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500"
           placeholder="Your password"
           autoComplete="off"
@@ -42,7 +82,7 @@ const LoginCard = () => {
       <p className="mx-auto mt-2 text-slate-600">
         New on our platform?
         <Link
-          href="/auth/signup"
+          to="/register"
           className="text-blue-500 hover:text-blue-800 ml-1"
         >
           Create an account
