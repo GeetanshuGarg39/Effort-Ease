@@ -8,7 +8,7 @@ const header = () => {
 
       <div className="flex gap-3 font-bold items-center">
         <Link to="/" className="flex bg-black text-white rounded-lg p-2 " >Login</Link>
-        <Link to="/" className=" bg-blue-500 text-white rounded-lg p-2">Register</Link>
+        <Link to="/register" className=" bg-blue-500 text-white rounded-lg p-2">Register</Link>
       </div>
     </div>
   );
