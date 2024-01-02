@@ -14,6 +14,13 @@ const userSchema = mongoose.Schema({
         type:String,
         required:true
     },
+    todos:[
+        {
+            todo:{
+                type:String,
+            }
+        }
+    ]
 },{
     timestamps:true
 })
