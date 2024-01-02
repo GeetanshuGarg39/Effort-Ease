@@ -1,14 +1,47 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const LoginCard = () => {
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setconfirmPassword] = useState("");
+const initialValues = {
+  name: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
+
+const RegisterCard = () => {
+  const history = useNavigate();
+
+  const [inputs, setInputs] = useState(initialValues);
+
+  const handleChange = (e) => {
+    setInputs((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const onSubmit = async () => {
+      try {
+        const res = await axios.post("http://localhost:8000/api/users", {
+          name: inputs.name,
+          email: inputs.email,
+          password: inputs.password,
+        });
+        console.log(res.data);
+        setInputs(initialValues);
+        history("/");
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    onSubmit();
+  };
 
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div>
         <label
           htmlFor="name"
@@ -19,7 +52,9 @@ const LoginCard = () => {
         <input
           type="name"
           id="name"
-          value={name}
+          name="name"
+          value={inputs.name}
+          onChange={handleChange}
           className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500"
           placeholder="Your name"
           autoComplete="name"
@@ -36,7 +71,9 @@ const LoginCard = () => {
         <input
           type="email"
           id="email"
-          value={email}
+          name="email"
+          value={inputs.email}
+          onChange={handleChange}
           className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500"
           placeholder="Your email"
           autoComplete="email"
@@ -54,7 +91,9 @@ const LoginCard = () => {
         <input
           type="password"
           id="password"
-          value={password}
+          name="password"
+          value={inputs.password}
+          onChange={handleChange}
           className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500"
           placeholder="Password"
           autoComplete="off"
@@ -69,9 +108,11 @@ const LoginCard = () => {
           Confirm Password
         </label>
         <input
-          type="confirmPassword"
+          type="password"
           id="confirmPassword"
-          value={confirmPassword}
+          name="confirmPassword"
+          value={inputs.confirmPassword}
+          onChange={handleChange}
           className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500"
           placeholder="Confirm Password"
           autoComplete="off"
@@ -98,4 +139,4 @@ const LoginCard = () => {
   );
 };
 
-export default LoginCard;
+export default RegisterCard;
